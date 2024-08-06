@@ -27,6 +27,24 @@ export default class SetName extends Component {
 			['c3', 'c5', 'c7']
 		]
 
+		this.win_sets_4 = [
+			['c1', 'c2', 'c3', 'c4'],
+			['c5', 'c6', 'c7', 'c8'],
+			['c9', 'c10', 'c11', 'c12'],
+			['c13', 'c14', 'c15', 'c16'],
+		
+			['c1', 'c5', 'c9', 'c13'],
+			['c2', 'c6', 'c10', 'c14'],
+			['c3', 'c7', 'c11', 'c15'],
+			['c4', 'c8', 'c12', 'c16'],
+		
+			['c1', 'c6', 'c11', 'c16'],
+			['c4', 'c7', 'c10', 'c13'],
+		
+			['c4', 'c7', 'c10', 'c13'],
+			['c1', 'c6', 'c11', 'c16']
+		]
+
 
 		if (this.props.game_type != 'live')
 			this.state = {
@@ -113,56 +131,162 @@ export default class SetName extends Component {
 
 //	------------------------	------------------------	------------------------
 
-	render () {
-		const { cell_vals, game_play, next_turn_ply } = this.state
-		// console.log(cell_vals)
+	render() {
+		const { game_type } = this.props;
+		const { next_turn_ply, game_stat, game_play } = this.state;
+		const compOpts = this.props.compGameOpts;
 
-		return (
-			<div id='GameMain'>
+		if (game_type == "live") {
+			return (
+				<div id='GameMain'>
 
-				<h1>Play {this.props.game_type}</h1>
+					<h1>Play {this.props.game_type}</h1>
 
-				<div id="game_stat">
-					<div id="game_stat_msg">{this.state.game_stat}</div>
-					{this.state.game_play && <div id="game_turn_msg">{this.state.next_turn_ply ? 'Your turn' : 'Opponent turn'}</div>}
+					<div id="game_stat">
+						<div id="game_stat_msg">{this.state.game_stat}</div>
+						{this.state.game_play && <div id="game_turn_msg">{this.state.next_turn_ply ? 'Your turn' : 'Opponent turn'}</div>}
+					</div>
+
+					{game_play &&  
+						<GameTimer
+							skipTurnComp={this.skip_turn_comp}
+							skipTurnLive={this.skip_turn_live}
+							gameType={this.props.game_type}
+							nextTurnPly={next_turn_ply}
+						/>
+					}
+
+					<div id="game_board">
+						<table>
+						<tbody>
+							<tr>
+								<td id='game_board-c1' ref='c1' onClick={this.click_cell.bind(this)}> {this.cell_cont('c1')} </td>
+								<td id='game_board-c2' ref='c2' onClick={this.click_cell.bind(this)} className="vbrd"> {this.cell_cont('c2')} </td>
+								<td id='game_board-c3' ref='c3' onClick={this.click_cell.bind(this)}> {this.cell_cont('c3')} </td>
+							</tr>
+							<tr>
+								<td id='game_board-c4' ref='c4' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c4')} </td>
+								<td id='game_board-c5' ref='c5' onClick={this.click_cell.bind(this)} className="vbrd hbrd"> {this.cell_cont('c5')} </td>
+								<td id='game_board-c6' ref='c6' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c6')} </td>
+							</tr>
+							<tr>
+								<td id='game_board-c7' ref='c7' onClick={this.click_cell.bind(this)}> {this.cell_cont('c7')} </td>
+								<td id='game_board-c8' ref='c8' onClick={this.click_cell.bind(this)} className="vbrd"> {this.cell_cont('c8')} </td>
+								<td id='game_board-c9' ref='c9' onClick={this.click_cell.bind(this)}> {this.cell_cont('c9')} </td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
+
+					<button type='submit' onClick={this.end_game.bind(this)} className='button'><span>End Game <span className='fa fa-caret-right'></span></span></button>
+
 				</div>
+			)
+		}
 
 
-				{game_play &&  
-					<GameTimer
-						skipTurnComp={this.skip_turn_comp}
-						skipTurnLive={this.skip_turn_live}
-						gameType={this.props.game_type}
-						nextTurnPly={next_turn_ply}
-					/>
-				}
+		if (compOpts.size == "3") {
+			return (
+				<div id='GameMain'>
 
-				<div id="game_board">
-					<table>
-					<tbody>
-						<tr>
-							<td id='game_board-c1' ref='c1' onClick={this.click_cell.bind(this)}> {this.cell_cont('c1')} </td>
-							<td id='game_board-c2' ref='c2' onClick={this.click_cell.bind(this)} className="vbrd"> {this.cell_cont('c2')} </td>
-							<td id='game_board-c3' ref='c3' onClick={this.click_cell.bind(this)}> {this.cell_cont('c3')} </td>
-						</tr>
-						<tr>
-							<td id='game_board-c4' ref='c4' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c4')} </td>
-							<td id='game_board-c5' ref='c5' onClick={this.click_cell.bind(this)} className="vbrd hbrd"> {this.cell_cont('c5')} </td>
-							<td id='game_board-c6' ref='c6' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c6')} </td>
-						</tr>
-						<tr>
-							<td id='game_board-c7' ref='c7' onClick={this.click_cell.bind(this)}> {this.cell_cont('c7')} </td>
-							<td id='game_board-c8' ref='c8' onClick={this.click_cell.bind(this)} className="vbrd"> {this.cell_cont('c8')} </td>
-							<td id='game_board-c9' ref='c9' onClick={this.click_cell.bind(this)}> {this.cell_cont('c9')} </td>
-						</tr>
-					</tbody>
-					</table>
+					<h1>Play {this.props.game_type}</h1>
+
+					<div id="game_stat">
+						<div id="game_stat_msg">{this.state.game_stat}</div>
+						{this.state.game_play && <div id="game_turn_msg">{this.state.next_turn_ply ? 'Your turn' : 'Opponent turn'}</div>}
+					</div>
+
+					{game_play &&  
+						<GameTimer
+							skipTurnComp={this.skip_turn_comp}
+							skipTurnLive={this.skip_turn_live}
+							gameType={this.props.game_type}
+							nextTurnPly={next_turn_ply}
+						/>
+					}
+
+					<div id="game_board">
+						<table>
+						<tbody>
+							<tr>
+								<td id='game_board-c1' ref='c1' onClick={this.click_cell.bind(this)}> {this.cell_cont('c1')} </td>
+								<td id='game_board-c2' ref='c2' onClick={this.click_cell.bind(this)} className="vbrd"> {this.cell_cont('c2')} </td>
+								<td id='game_board-c3' ref='c3' onClick={this.click_cell.bind(this)}> {this.cell_cont('c3')} </td>
+							</tr>
+							<tr>
+								<td id='game_board-c4' ref='c4' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c4')} </td>
+								<td id='game_board-c5' ref='c5' onClick={this.click_cell.bind(this)} className="vbrd hbrd"> {this.cell_cont('c5')} </td>
+								<td id='game_board-c6' ref='c6' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c6')} </td>
+							</tr>
+							<tr>
+								<td id='game_board-c7' ref='c7' onClick={this.click_cell.bind(this)}> {this.cell_cont('c7')} </td>
+								<td id='game_board-c8' ref='c8' onClick={this.click_cell.bind(this)} className="vbrd"> {this.cell_cont('c8')} </td>
+								<td id='game_board-c9' ref='c9' onClick={this.click_cell.bind(this)}> {this.cell_cont('c9')} </td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
+
+					<button type='submit' onClick={this.end_game.bind(this)} className='button'><span>End Game <span className='fa fa-caret-right'></span></span></button>
+
 				</div>
+			)
+		} else if (compOpts.size == "4") {
+			return (
+				<div id='GameMain'>
+		
+					<h1>Play {this.props.game_type}</h1>
+		
+					<div id="game_stat">
+						<div id="game_stat_msg">{this.state.game_stat}</div>
+						{this.state.game_play && <div id="game_turn_msg">{this.state.next_turn_ply ? 'Your turn' : 'Opponent turn'}</div>}
+					</div>
 
-				<button type='submit' onClick={this.end_game.bind(this)} className='button'><span>End Game <span className='fa fa-caret-right'></span></span></button>
-
-			</div>
-		)
+					{game_play &&  
+						<GameTimer
+							skipTurnComp={this.skip_turn_comp}
+							skipTurnLive={this.skip_turn_live}
+							gameType={this.props.game_type}
+							nextTurnPly={next_turn_ply}
+						/>
+					}
+		
+					<div id="game_board">
+						<table>
+						<tbody>
+						<tr>
+							<td id='game_board-c1' ref='c1' onClick={this.click_cell.bind(this)} className="br"> {this.cell_cont('c1')} </td>
+							<td id='game_board-c2' ref='c2' onClick={this.click_cell.bind(this)} className="br bl"> {this.cell_cont('c2')} </td>
+							<td id='game_board-c3' ref='c3' onClick={this.click_cell.bind(this)} className='br bl'> {this.cell_cont('c3')} </td>
+							<td id='game_board-c4' ref='c4' onClick={this.click_cell.bind(this)}> {this.cell_cont('c4')} </td>
+						</tr>
+						<tr>
+							<td id='game_board-c5' ref='c5' onClick={this.click_cell.bind(this)} className="bt br"> {this.cell_cont('c5')} </td>
+							<td id='game_board-c6' ref='c6' onClick={this.click_cell.bind(this)} className="bt br"> {this.cell_cont('c6')} </td>
+							<td id='game_board-c7' ref='c7' onClick={this.click_cell.bind(this)} className="bt br"> {this.cell_cont('c7')} </td>
+							<td id='game_board-c8' ref='c8' onClick={this.click_cell.bind(this)} className="bt"> {this.cell_cont('c8')} </td>
+						</tr>
+						<tr>
+							<td id='game_board-c9' ref='c9' onClick={this.click_cell.bind(this)} className="bt br"> {this.cell_cont('c9')} </td>
+							<td id='game_board-c10' ref='c10' onClick={this.click_cell.bind(this)} className="bt br"> {this.cell_cont('c10')} </td>
+							<td id='game_board-c11' ref='c11' onClick={this.click_cell.bind(this)} className="bt br"> {this.cell_cont('c11')} </td>
+							<td id='game_board-c12' ref='c12' onClick={this.click_cell.bind(this)} className="bt"> {this.cell_cont('c12')} </td>
+						</tr>
+						<tr>
+							<td id='game_board-c13' ref='c13' onClick={this.click_cell.bind(this)} className='bt br'> {this.cell_cont('c13')} </td>
+							<td id='game_board-c14' ref='c14' onClick={this.click_cell.bind(this)} className="bt br"> {this.cell_cont('c14')} </td>
+							<td id='game_board-c15' ref='c15' onClick={this.click_cell.bind(this)} className='bt br'> {this.cell_cont('c15')} </td>
+							<td id='game_board-c16' ref='c16' onClick={this.click_cell.bind(this)} className="bt"> {this.cell_cont('c16')} </td>
+						</tr>
+						</tbody>
+						</table>
+					</div>
+		
+					<button type='submit' onClick={this.end_game.bind(this)} className='button'><span>End Game <span className='fa fa-caret-right'></span></span></button>
+		
+				</div>
+			)
+		}
 	}
 
 //	------------------------	------------------------	------------------------
@@ -191,7 +315,7 @@ export default class SetName extends Component {
 		let { cell_vals } = this.state
 
 		cell_vals[cell_id] = 'x'
-
+		
 		TweenMax.from(this.refs[cell_id], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
 
 
@@ -212,18 +336,31 @@ export default class SetName extends Component {
 	turn_comp () {
 
 		let { cell_vals } = this.state
+		const compOpts = this.props.compGameOpts;
 		let empty_cells_arr = []
+		
 
+		if (compOpts.size == '3') {
 
-		for (let i=1; i<=9; i++) 
-			!cell_vals['c'+i] && empty_cells_arr.push('c'+i)
-		// console.log(cell_vals, empty_cells_arr, rand_arr_elem(empty_cells_arr))
+			for (let i=1; i<=9; i++) 
+				!cell_vals['c'+i] && empty_cells_arr.push('c'+i)
+			// console.log(cell_vals, empty_cells_arr, rand_arr_elem(empty_cells_arr))
 
-		const c = rand_arr_elem(empty_cells_arr)
-		cell_vals[c] = 'o'
+			const c = rand_arr_elem(empty_cells_arr)
+			cell_vals[c] = 'o'
 
-		TweenMax.from(this.refs[c], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
+			TweenMax.from(this.refs[c], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
+			
+		} else if (compOpts.size == '4') {
 
+			for (let i=1; i<=16; i++) 
+				!cell_vals['c'+i] && empty_cells_arr.push('c'+i)
+
+			const c = rand_arr_elem(empty_cells_arr)
+			cell_vals[c] = 'o'
+
+			TweenMax.from(this.refs[c], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
+		}
 
 		// this.setState({
 		// 	cell_vals: cell_vals,
@@ -292,6 +429,8 @@ export default class SetName extends Component {
 	check_turn () {
 
 		const { cell_vals } = this.state
+		const compGameGridSize = this.props.compGameOpts.size
+		const { game_type } = this.props
 
 		let win = false
 		let set
@@ -301,16 +440,38 @@ export default class SetName extends Component {
 		if (this.props.game_type!='live')
 			this.state.game_stat = 'Play'
 
+		if (game_type == 'comp' && compGameGridSize == '3') {
+			for (let i=0; !win && i<this.win_sets.length; i++) {
+				set = this.win_sets[i]
+				if (cell_vals[set[0]] && cell_vals[set[0]]==cell_vals[set[1]] && cell_vals[set[0]]==cell_vals[set[2]])
+					win = true
+			}
+	
+	
+			for (let i=1; i<=9; i++) 
+				!cell_vals['c'+i] && (fin = false)
 
-		for (let i=0; !win && i<this.win_sets.length; i++) {
-			set = this.win_sets[i]
-			if (cell_vals[set[0]] && cell_vals[set[0]]==cell_vals[set[1]] && cell_vals[set[0]]==cell_vals[set[2]])
-				win = true
+		} else if (game_type == 'comp' && compGameGridSize == '4') {
+			for (let i=0; !win && i<this.win_sets_4.length; i++) {
+				set = this.win_sets_4[i]
+				if (cell_vals[set[0]] && cell_vals[set[0]]==cell_vals[set[1]] && cell_vals[set[0]]==cell_vals[set[2]] && cell_vals[set[0]]==cell_vals[set[3]])
+					win = true
+			}
+	
+	
+			for (let i=1; i<=16; i++) 
+				!cell_vals['c'+i] && (fin = false)
+		} else {
+			for (let i=0; !win && i<this.win_sets.length; i++) {
+				set = this.win_sets[i]
+				if (cell_vals[set[0]] && cell_vals[set[0]]==cell_vals[set[1]] && cell_vals[set[0]]==cell_vals[set[2]])
+					win = true
+			}
+	
+	
+			for (let i=1; i<=9; i++) 
+				!cell_vals['c'+i] && (fin = false)
 		}
-
-
-		for (let i=1; i<=9; i++) 
-			!cell_vals['c'+i] && (fin = false)
 
 		// win && console.log('win set: ', set)
 
@@ -319,6 +480,7 @@ export default class SetName extends Component {
 			this.refs[set[0]].classList.add('win')
 			this.refs[set[1]].classList.add('win')
 			this.refs[set[2]].classList.add('win')
+			if (game_type == 'comp' && compGameGridSize == '4') this.refs[set[3]].classList.add('win')
 
 			TweenMax.killAll(true)
 			TweenMax.from('td.win', 1, {opacity: 0, ease: Linear.easeIn})

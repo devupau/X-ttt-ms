@@ -1,0 +1,32 @@
+// Computer options container
+.ttt-comp-opts {
+  margin-top: 50px;
+  padding: 20px 0;
+
+  // Main options heading
+  h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+  }
+}
+
+// Option / value container
+.ttt-comp-opt {
+  display: flex;
+  flex-direction: column;
+
+  // Option label
+  label {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 5px;
+  }
+
+}
+
+// Option - Grid size
+.ttt-comp-opt__size {
+    select {
+        max-width: 300px;
+    }
+}

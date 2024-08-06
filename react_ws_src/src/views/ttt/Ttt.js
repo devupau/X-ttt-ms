@@ -13,6 +13,9 @@ const DEFAULT_STATS = {
 	losses: 0,
 	draws: 0
 }
+const DEFAULT_COMP_OPTIONS = {
+	size: "3",
+}
 
 export default class Ttt extends Component {
 
@@ -24,7 +27,8 @@ export default class Ttt extends Component {
 			// Object spreading not available using "es2015" babel preset
 			// Must use Object.assign() instead to create unique object references
 			comp_stats: Object.assign({}, DEFAULT_STATS),
-			live_stats: Object.assign({}, DEFAULT_STATS) 
+			live_stats: Object.assign({}, DEFAULT_STATS), 
+			comp_options: DEFAULT_COMP_OPTIONS 
 		}
 
 		this.upd_stats = this.upd_stats.bind(this)
@@ -54,6 +58,8 @@ export default class Ttt extends Component {
 
 					{game_step == 'set_game_type' && <SetGameType 
 														onSetType={this.saveGameType.bind(this)} 
+														compGameOpts={this.state.comp_options}
+														updCompGameOpts={this.upd_comp_opt.bind(this)}
 													/>}
 					{game_step == 'set_game_type' && <TttStats 
 														stats={{
@@ -65,6 +71,7 @@ export default class Ttt extends Component {
 														game_type={this.state.game_type}
 														onEndGame={this.gameEnd.bind(this)} 
 														updateStats={this.upd_stats}
+														compGameOpts={this.state.comp_options}
 													/>}
 
 				</div>
@@ -130,9 +137,20 @@ export default class Ttt extends Component {
 
 	}
 
-}
+//	------------------------	------------------------	------------------------
+
+
+	upd_comp_opt (opt, value) {
+		this.setState(prevState => {
+			return prevState.comp_options[opt] = value
+		})
+	}
 
 //	------------------------	------------------------	------------------------
+
+
+}
+
 
 Ttt.propTypes = {
 	params: React.PropTypes.any
