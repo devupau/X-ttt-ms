@@ -79,8 +79,7 @@ export default class SetName extends Component {
 
 
 		this.socket.on('opp_turn', this.turn_opp_live.bind(this));
-
-
+		this.socket.on("opp_dc", this.opp_dc.bind(this));
 
 	}
 
@@ -339,5 +338,16 @@ export default class SetName extends Component {
 	}
 
 
+//	------------------------	------------------------	------------------------
+//	------------------------	------------------------	------------------------
+	
+	opp_dc() {
+
+		this.setState({
+			game_stat: "You win (your opponent quit).",
+			game_play: false
+		})
+
+	}
 
 }

@@ -76,6 +76,12 @@ function onTurn(data) {
 function onClientDisconnect() {
 	// util.log("onClientDisconnect: "+this.id);
 
+	const opponent = this.player?.opp
+
+	// Send disconnect message to player's opponent
+	if (opponent) {
+		io.to(opponent.sockid).emit("opp_dc");	
+	}
 
 	var removePlayer = this.player;
 	players.splice(players.indexOf(removePlayer), 1);
