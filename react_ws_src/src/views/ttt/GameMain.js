@@ -296,6 +296,7 @@ export default class SetName extends Component {
 		let win = false
 		let set
 		let fin = true
+		const gameModeStat = this.props.game_type == 'live' ? 'live_stats' : 'comp_stats'
 
 		if (this.props.game_type!='live')
 			this.state.game_stat = 'Play'
@@ -327,6 +328,9 @@ export default class SetName extends Component {
 				game_play: false
 			})
 
+			const gameStatToUpdate = cell_vals[set[0]]=='x' ? 'wins' : 'losses'
+			this.props.updateStats(gameModeStat, gameStatToUpdate)
+
 			this.socket && this.socket.disconnect();
 
 		} else if (fin) {
@@ -335,8 +339,9 @@ export default class SetName extends Component {
 				game_stat: 'Draw',
 				game_play: false
 			})
-
 			this.socket && this.socket.disconnect();
+
+			this.props.updateStats(gameModeStat, "draws")
 
 		} else {
 			this.props.game_type!='live' && this.state.next_turn_ply && setTimeout(this.turn_comp.bind(this), rand_to_fro(500, 1000));
@@ -366,8 +371,12 @@ export default class SetName extends Component {
 			game_stat: "You win (your opponent quit).",
 			game_play: false
 		})
+		this.props.updateStats("live_stats", "wins")
 
 	}
+
+//	------------------------	------------------------	------------------------
+//	------------------------	------------------------	------------------------
 
     skip_turn_comp() {
 

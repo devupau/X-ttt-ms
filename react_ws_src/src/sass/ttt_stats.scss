@@ -1,0 +1,54 @@
+// No stats message
+.ttt_stats__default {
+  margin-top: 50px;
+
+  // Main heading
+  h2 {
+    font-size: 32px;
+  }
+}
+
+// Stats container
+.ttt_stats {
+  margin-top: 50px;
+
+  // Main heading
+  h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  // Live stats container
+  .ttt_stats__row-mode:nth-of-type(3) {
+    margin-top: 20px;
+  }
+}
+
+// Stats game mode (Live / Computer)
+.ttt_stats__row-mode {
+  padding: 10px;
+  background: $colorSecondary;
+  color: #fff;
+}
+
+// Stats headings
+.ttt_stats__row-header {
+  display: flex;
+  padding: 5px;
+  margin-top: 10px;
+
+  p {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+  }
+}
+
+// Stats values
+.ttt_stats__row-stats {
+  display: flex;
+  p {
+    width: 100%;
+    text-align: center;
+  }
+}

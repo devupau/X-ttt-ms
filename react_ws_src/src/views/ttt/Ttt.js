@@ -6,14 +6,29 @@ import SetGameType from './SetGameType'
 
 import GameMain from './GameMain'
 
+import TttStats from './TttStats'
+
+const DEFAULT_STATS = {
+	wins: 0,
+	losses: 0,
+	draws: 0
+}
+
 export default class Ttt extends Component {
 
 	constructor (props) {
 		super(props)
 
 		this.state = {
-			game_step: this.set_game_step()
+			game_step: this.set_game_step(),
+			// Object spreading not available using "es2015" babel preset
+			// Must use Object.assign() instead to create unique object references
+			comp_stats: Object.assign({}, DEFAULT_STATS),
+			live_stats: Object.assign({}, DEFAULT_STATS) 
 		}
+
+		this.upd_stats = this.upd_stats.bind(this)
+	 
 	}
 
 //	------------------------	------------------------	------------------------
@@ -40,9 +55,16 @@ export default class Ttt extends Component {
 					{game_step == 'set_game_type' && <SetGameType 
 														onSetType={this.saveGameType.bind(this)} 
 													/>}
+					{game_step == 'set_game_type' && <TttStats 
+														stats={{
+															comp_stats: this.state.comp_stats,
+															live_stats: this.state.live_stats
+														}}
+													/>}													
 					{game_step == 'start_game' && <GameMain 
 														game_type={this.state.game_type}
 														onEndGame={this.gameEnd.bind(this)} 
+														updateStats={this.upd_stats}
 													/>}
 
 				</div>
@@ -95,6 +117,17 @@ export default class Ttt extends Component {
 			return 'set_game_type'
 		else
 			return 'start_game'
+	}
+
+//	------------------------	------------------------	------------------------
+
+	upd_stats (mode, stat) {
+
+		this.setState((prevState) => {
+			prevState[mode][stat] += 1
+			return prevState
+		})
+
 	}
 
 }
