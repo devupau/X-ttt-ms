@@ -7,6 +7,8 @@ import TweenMax from 'gsap'
 import rand_arr_elem from '../../helpers/rand_arr_elem'
 import rand_to_fro from '../../helpers/rand_to_fro'
 
+import GameTimer from './GameTimer'
+
 export default class SetName extends Component {
 
 	constructor (props) {
@@ -43,6 +45,11 @@ export default class SetName extends Component {
 				game_stat: 'Connecting'
 			}
 		}
+
+		this.skip_turn_comp = this.skip_turn_comp.bind(this)
+		this.skip_turn_live = this.skip_turn_live.bind(this)
+		this.turn_opp_live = this.turn_opp_live.bind(this)
+		
 	}
 
 //	------------------------	------------------------	------------------------
@@ -80,6 +87,8 @@ export default class SetName extends Component {
 
 		this.socket.on('opp_turn', this.turn_opp_live.bind(this));
 		this.socket.on("opp_dc", this.opp_dc.bind(this));
+		this.socket.on("opp_turn_skip", this.opp_turn_skip.bind(this))
+
 
 	}
 
@@ -105,7 +114,7 @@ export default class SetName extends Component {
 //	------------------------	------------------------	------------------------
 
 	render () {
-		const { cell_vals } = this.state
+		const { cell_vals, game_play, next_turn_ply } = this.state
 		// console.log(cell_vals)
 
 		return (
@@ -117,6 +126,16 @@ export default class SetName extends Component {
 					<div id="game_stat_msg">{this.state.game_stat}</div>
 					{this.state.game_play && <div id="game_turn_msg">{this.state.next_turn_ply ? 'Your turn' : 'Opponent turn'}</div>}
 				</div>
+
+
+				{game_play &&  
+					<GameTimer
+						skipTurnComp={this.skip_turn_comp}
+						skipTurnLive={this.skip_turn_live}
+						gameType={this.props.game_type}
+						nextTurnPly={next_turn_ply}
+					/>
+				}
 
 				<div id="game_board">
 					<table>
@@ -346,6 +365,46 @@ export default class SetName extends Component {
 		this.setState({
 			game_stat: "You win (your opponent quit).",
 			game_play: false
+		})
+
+	}
+
+    skip_turn_comp() {
+
+		// Skip player's turn 
+		this.setState({
+			next_turn_ply: !this.state.next_turn_ply
+		})
+
+		// Do computer's turn (turn_comp also sets the player's turn again)
+		this.turn_comp()
+		
+	}
+
+//	------------------------	------------------------	------------------------
+//	------------------------	------------------------	------------------------
+
+
+	skip_turn_live() {
+
+		// Skip local player's turn 
+		this.setState({
+			next_turn_ply: !this.state.next_turn_ply
+		})
+
+		// Push skip turn message to opponent
+		this.socket.emit('ply_turn_skip');
+		
+	}
+
+//	------------------------	------------------------	------------------------
+//	------------------------	------------------------	------------------------
+
+	opp_turn_skip() {
+
+		// Skip opponent's turn 
+		this.setState({
+			next_turn_ply: !this.state.next_turn_ply
 		})
 
 	}

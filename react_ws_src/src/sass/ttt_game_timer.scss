@@ -1,0 +1,17 @@
+.game_timer {
+  
+  display: flex;
+  align-items: center;
+  margin-left: 10px; // align timer to game board + stats
+
+  // Text
+  p {
+    font-size: 18px;
+  }
+
+  // Icon
+  .fa {
+    margin-right: 5px;
+  }
+
+}
