@@ -1,7 +1,7 @@
 {
   "name": "XTTT-react-client",
   "description": "X Tic Tac Toe game demo front end built with React.js stack",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Maxim Shklyar, kisla interactive, <maxim@kisla.com>",
   "private": true,
   "license": "",
