@@ -9,7 +9,8 @@ class SetCompGameOptions extends Component {
   }
 
   render() {
-    const { size, updOptions } = this.props.options;
+    const { size } = this.props.options;
+    const { updOptions } = this.props;
 
     return (
       <div className="ttt-comp-opts">
